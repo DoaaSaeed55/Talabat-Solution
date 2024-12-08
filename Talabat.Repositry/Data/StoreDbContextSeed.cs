@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Talabat.Core.Entities;
+using Talabat.Core.Entities.Order;
 
 namespace Talabat.Repositry.Data
 {
@@ -59,6 +60,24 @@ namespace Talabat.Repositry.Data
                     foreach (var product in products)
                     {
                         _context.Set<Product>().Add(product);
+
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            //order
+            if (_context.DeliveryMethods.Count() == 0)
+            {
+                var deliveryData = File.ReadAllText(path: "../Talabat.Repositry/Data/DataSeed/delivery.json");
+                var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryData);
+
+                if (deliveryMethods?.Count() > 0)
+                {
+                    foreach (var del in deliveryMethods)
+                    {
+                        _context.Set<DeliveryMethod>().Add(del);
 
                     }
 
